@@ -3,10 +3,9 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Tap to Place Video in AR</title>
+    <title>Tap to Place AR Video</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aframe-ar@1.8.0/dist/aframe-ar.min.js"></script>
     <style>
       body { margin: 0; overflow: hidden; }
@@ -32,36 +31,26 @@
       arjs="sourceType: webcam; debugUIEnabled: false;"
     >
       <a-assets>
-        <video id="promo" src="promo.mp4" autoplay loop="true" crossorigin="anonymous" webkit-playsinline playsinline></video>
+        <video id="promo" src="promo.mp4" autoplay loop crossorigin="anonymous" webkit-playsinline playsinline></video>
       </a-assets>
 
       <a-entity camera></a-entity>
 
       <a-entity id="videoPlane" geometry="primitive: plane; height: 1; width: 1.78"
                 material="shader: flat; src: #promo"
-                position="0 0 -2"
+                position="0 0 -3"
                 visible="false">
       </a-entity>
     </a-scene>
 
     <script>
-      let placed = false;
       const scene = document.querySelector("a-scene");
       const videoPlane = document.getElementById("videoPlane");
       const video = document.getElementById("promo");
+      let placed = false;
 
-      scene.addEventListener("click", function (e) {
+      scene.addEventListener("click", () => {
         if (!placed) {
-          const touch = e.touches ? e.touches[0] : e;
-          const touchX = (touch.clientX / window.innerWidth) * 2 - 1;
-          const touchY = -(touch.clientY / window.innerHeight) * 2 + 1;
-
-          const camera = scene.camera;
-          const direction = new THREE.Vector3(touchX, touchY, -1).unproject(camera).sub(camera.position).normalize();
-          const distance = -camera.position.z / direction.z;
-          const pos = camera.position.clone().add(direction.multiplyScalar(distance));
-
-          videoPlane.setAttribute("position", `${pos.x} ${pos.y} ${pos.z}`);
           videoPlane.setAttribute("visible", "true");
           video.play();
           placed = true;
