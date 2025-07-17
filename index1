@@ -29,12 +29,12 @@
     }
     #ppBtn {
       position: absolute;
-      bottom: 40px; left: 50%;
+      top: calc(50% + 140px); left: 50%;
       transform: translateX(-50%);
-      padding: 12px 28px;
-      font-size: 18px;
+      padding: 8px 12px;
+      font-size: 20px;
       border: none;
-      border-radius: 8px;
+      border-radius: 50%;
       background: #fff;
       color: #000;
       cursor: pointer;
@@ -98,7 +98,7 @@
 
 <video id="cam" autoplay muted playsinline></video>
 <video id="ad" playsinline loop></video>
-<button id="ppBtn">Play</button>
+<button id="ppBtn" title="Play/Pause">▶️</button>
 
 <div class="thumbnail-bar">
   <div class="thumbnail" data-src="advertisement/promo1.mp4">PLAN1</div>
@@ -113,10 +113,10 @@
   <button id="shareBtn" title="Share">
     <img src="share logo.png" alt="Share">
   </button>
-  <button id="locationBtn" title="Location">
-    <img src="share logo.png" alt="Location">
-  </button>
-  <a href="https://wa.me/?text=Check%20out%20this%20awesome%20AR%20video!" target="_blank" id="whatsappBtn" title="WhatsApp">
+  <a href="https://maps.app.goo.gl/2g4prviFVzsdK14e9" target="_blank" id="locationBtn" title="Location">
+    <img src="loclogo.png" alt="Location">
+  </a>
+  <a href="https://wa.me/916379907619?text=Hi%20Welcome%20to%20Fine%20Gold%20&%20Diamonds%20,%20Can%20i%20get%20more%20datails%20about%20the%20plans" target="_blank" id="whatsappBtn" title="WhatsApp">
     <img src="logo whatsapp.png" alt="WhatsApp">
   </a>
 </div>
@@ -129,6 +129,7 @@
 
   let videoLoaded = false;
   let currentVideoSrc = '';
+  let isPlaying = false;
 
   navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
     .then(stream => {
@@ -147,7 +148,8 @@
         videoLoaded = true;
         ad.style.display = 'block';
         ad.play();
-        btn.textContent = 'Pause';
+        isPlaying = true;
+        btn.innerText = '⏸️';
         btn.style.display = 'block';
         thumbnails.forEach(t => t.classList.remove('selected'));
         thumbnail.classList.add('selected');
@@ -160,13 +162,15 @@
 
     if (ad.paused) {
       ad.play().then(() => {
-        btn.textContent = 'Pause';
+        btn.innerText = '⏸️';
+        isPlaying = true;
       }).catch(e => {
         alert('Playback failed: ' + e.message);
       });
     } else {
       ad.pause();
-      btn.textContent = 'Play';
+      btn.innerText = '▶️';
+      isPlaying = false;
     }
   });
 
